@@ -786,10 +786,13 @@ class Swiper extends Component {
 
     if (animatedValueX > animatedValueY) {
       translateY = Animated.add(
-        this.state.pan.x.interpolate({
-          inputRange: this.props.inputCardPositionRangeX,
-          outputRange: this.props.outputCardPositionRangeX
-        }),
+        Animated.add(
+          this.state.pan.x.interpolate({
+            inputRange: this.props.inputCardPositionRangeX,
+            outputRange: this.props.outputCardPositionRangeX
+          }),
+          new Animated.Value(10)
+        ),
         stackPosition
       );
     } else {
@@ -868,7 +871,7 @@ class Swiper extends Component {
   pushCardToStack = (renderedCards, index, position, key, firstCard) => {
     const { cards } = this.props;
     const stackCardZoomStyle = this.calculateStackCardZoomStyle(position);
-    const stackCard = this.props.renderCard(cards[index], index);
+    const stackCard = this.props.renderCard(cards[index], position, index);
     const swipableCardStyle = this.calculateSwipableCardStyle();
     const renderOverlayLabel = this.renderOverlayLabel();
     renderedCards.push(
