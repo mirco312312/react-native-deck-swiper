@@ -294,8 +294,6 @@ class Swiper extends Component {
   };
 
   onPanResponderRelease = (e, gestureState) => {
-    this.state._progress.setValue(0);
-
     this.props.dragEnd && this.props.dragEnd();
     if (this.state.panResponderLocked) {
       this.state.pan.setValue({
@@ -584,6 +582,14 @@ class Swiper extends Component {
             : stackOpacity[position];
 
         Animated.parallel([
+          Animated.timing(this.state._progress, {
+            toValue: 0,
+            duration: this.props.zoomAnimationDuration,
+            delay: this.props.zoomAnimationDelay,
+            easing: Easing.inOut(Easing.linear),
+            useNativeDriver: true
+          }),
+
           Animated.timing(this.state[`stackPosition${stackSize}`], {
             toValue: newSeparation,
             friction: this.props.stackAnimationFriction,
@@ -1097,7 +1103,10 @@ Swiper.propTypes = {
   showSecondCard: PropTypes.bool,
   stackAnimationFriction: PropTypes.number,
   stackAnimationTension: PropTypes.number,
-  stackOpacity: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
+  stackOpacity: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.arrayOf(PropTypes.number)
+  ]),
   stackScale: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   stackSeparation: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
   stackSize: PropTypes.number,
