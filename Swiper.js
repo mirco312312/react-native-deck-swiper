@@ -324,6 +324,7 @@ class Swiper extends Component {
       );
 
       this.swipeCard(onSwipeDirectionCallback).then(() => {
+        this.state._progress.setValue(0);
         this.state.progress.setValue(0);
       });
     } else {
@@ -490,7 +491,7 @@ class Swiper extends Component {
           useNativeDriver: true
         }),
         Animated.timing(this.state.progress, {
-          toValue: 1, //0.0125,
+          toValue: 1,
           easing: Easing.inOut(Easing.linear),
           duration: this.props.swipeAnimationDuration,
           useNativeDriver: true
@@ -581,45 +582,47 @@ class Swiper extends Component {
             ? stackOpacity(position)
             : stackOpacity[position];
 
-        Animated.parallel([
-          Animated.timing(this.state._progress, {
-            toValue: 0,
-            duration: this.props.zoomAnimationDuration,
-            delay: this.props.zoomAnimationDelay,
-            easing: Easing.inOut(Easing.linear),
-            useNativeDriver: true
-          }),
+        Animated.parallel(
+          [
+            position === 0 && Animated.timing(this.state._progress, {
+              toValue: 0,
+              duration: this.props.zoomAnimationDuration,
+              delay: this.props.zoomAnimationDelay,
+              easing: Easing.inOut(Easing.linear),
+              useNativeDriver: true
+            }),
 
-          Animated.timing(this.state[`stackPosition${stackSize}`], {
-            toValue: newSeparation,
-            friction: this.props.stackAnimationFriction,
-            tension: this.props.stackAnimationTension,
-            duration: this.props.zoomAnimationDuration,
-            delay: this.props.zoomAnimationDelay,
-            easing: Easing.inOut(Easing.linear),
-            useNativeDriver: true
-          }),
+            Animated.timing(this.state[`stackPosition${stackSize}`], {
+              toValue: newSeparation,
+              friction: this.props.stackAnimationFriction,
+              tension: this.props.stackAnimationTension,
+              duration: this.props.zoomAnimationDuration,
+              delay: this.props.zoomAnimationDelay,
+              easing: Easing.inOut(Easing.linear),
+              useNativeDriver: true
+            }),
 
-          Animated.timing(this.state[`stackScale${stackSize}`], {
-            toValue: newScale,
-            friction: this.props.stackAnimationFriction,
-            tension: this.props.stackAnimationTension,
-            duration: this.props.zoomAnimationDuration,
-            delay: this.props.zoomAnimationDelay,
-            easing: Easing.inOut(Easing.linear),
-            useNativeDriver: true
-          }),
+            Animated.timing(this.state[`stackScale${stackSize}`], {
+              toValue: newScale,
+              friction: this.props.stackAnimationFriction,
+              tension: this.props.stackAnimationTension,
+              duration: this.props.zoomAnimationDuration,
+              delay: this.props.zoomAnimationDelay,
+              easing: Easing.inOut(Easing.linear),
+              useNativeDriver: true
+            }),
 
-          Animated.timing(this.state[`stackOpacity${stackSize}`], {
-            toValue: newOpacity,
-            friction: this.props.stackAnimationFriction,
-            tension: this.props.stackAnimationTension,
-            duration: this.props.zoomAnimationDuration,
-            delay: this.props.zoomAnimationDelay,
-            easing: Easing.inOut(Easing.linear),
-            useNativeDriver: true
-          })
-        ]).start();
+            Animated.timing(this.state[`stackOpacity${stackSize}`], {
+              toValue: newOpacity,
+              friction: this.props.stackAnimationFriction,
+              tension: this.props.stackAnimationTension,
+              duration: this.props.zoomAnimationDuration,
+              delay: this.props.zoomAnimationDelay,
+              easing: Easing.inOut(Easing.linear),
+              useNativeDriver: true
+            })
+          ].filter(v => v)
+        ).start();
       }
 
       if (index === cards.length - 1) {
@@ -1177,7 +1180,7 @@ Swiper.defaultProps = {
   onTapCardDeadZone: 5,
   outputCardOpacityRange: [0.5, 1],
   outputCardScaleRange: [1, 1.1],
-  outputCardPositionRange: [0, height * -0.075],
+  outputCardPositionRange: [0, height * -0.05],
   outputOverlayLabelsOpacityRangeX: [1, 0, 0, 0, 1],
   outputOverlayLabelsOpacityRangeY: [1, 0, 0, 0, 1],
   outputRotationRange: ["-10deg", "0deg", "10deg"],
