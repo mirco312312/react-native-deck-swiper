@@ -189,10 +189,15 @@ class Swiper extends Component {
       Math.abs(this._animatedValueX / Dimensions.get("window").width),
       Math.abs(this._animatedValueY / Dimensions.get("window").height)
     );
-    this.state._progress.setValue(Math.min(progress * 2, 1));
-    this.state.progress.setValue(Math.min(progress * 2, 1));
+    const progressPct = Math.min(progress * 2, 1);
+    this.state._progress.setValue(progressPct);
+    this.state.progress.setValue(progressPct);
 
-    this.props.onSwiping(this._animatedValueX, this._animatedValueY);
+    this.props.onSwiping(
+      this._animatedValueX,
+      this._animatedValueY,
+      progressPct
+    );
 
     let {
       overlayOpacityHorizontalThreshold,
@@ -584,13 +589,14 @@ class Swiper extends Component {
 
         Animated.parallel(
           [
-            position === 0 && Animated.timing(this.state._progress, {
-              toValue: 0,
-              duration: this.props.zoomAnimationDuration,
-              delay: this.props.zoomAnimationDelay,
-              easing: Easing.inOut(Easing.linear),
-              useNativeDriver: true
-            }),
+            position === 0 &&
+              Animated.timing(this.state._progress, {
+                toValue: 0,
+                duration: this.props.zoomAnimationDuration,
+                delay: this.props.zoomAnimationDelay,
+                easing: Easing.inOut(Easing.linear),
+                useNativeDriver: true
+              }),
 
             Animated.timing(this.state[`stackPosition${stackSize}`], {
               toValue: newSeparation,
@@ -1088,7 +1094,6 @@ Swiper.propTypes = {
   outputCardOpacityRange: PropTypes.array,
   outputCardScaleRange: PropTypes.array,
   outputCardPositionRange: PropTypes.array,
-
   outputOverlayLabelsOpacityRangeX: PropTypes.array,
   outputOverlayLabelsOpacityRangeY: PropTypes.array,
   outputRotationRange: PropTypes.array,
@@ -1149,7 +1154,6 @@ Swiper.defaultProps = {
   inputCardOpacityRange: [0, 1],
   inputCardScaleRange: [0, 1],
   inputCardPositionRange: [0, 1],
-
   inputOverlayLabelsOpacityRangeX: [
     -width / 3,
     -width / 4,
