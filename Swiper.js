@@ -187,7 +187,7 @@ class Swiper extends Component {
   onPanResponderMove = (event, gestureState) => {
     const progress = Math.max(
       Math.abs(this._animatedValueX / Dimensions.get("window").width),
-      Math.abs(this._animatedValueY / Dimensions.get("window").height)
+      Math.abs(this._animatedValueY / Dimensions.get("window").height) * 2
     );
     const progressPct = Math.min(progress * 2, 1);
     this.state._progress.setValue(progressPct);
